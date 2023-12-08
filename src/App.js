@@ -1,6 +1,7 @@
 import './App.css';
 import {useDispatch, useSelector} from "react-redux";
 import {addCustomerAction, removeCustomerAction} from "./store/customerReducer";
+import {fetchCustomers} from "./asyncActions/customers";
 
 function App() {
     const dispatch = useDispatch();
@@ -44,9 +45,9 @@ function App() {
                     style={{padding: '10px', background:'red', color: 'white'}}>
                 Add customer
             </button>
-            <button onClick={()=> deleteCustomer()}
+            <button onClick={()=> dispatch(fetchCustomers())}
                     style={{padding: '10px', background:'blue', color: 'white'}}>
-                Delete customer
+                Get clients from DB
             </button>
         </div>
 
