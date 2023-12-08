@@ -1,15 +1,29 @@
 import './App.css';
 import {useDispatch, useSelector} from "react-redux";
+import {addCustomerAction, removeCustomerAction} from "./store/customerReducer";
 
 function App() {
     const dispatch = useDispatch();
-    const cash = useSelector(state => state.cash);
+    const cash = useSelector(state => state.cash.cash);
+    const customers = useSelector(state => state.customers.customers)
 
     const addCash =(cash)=> {
         dispatch({type: 'ADD_CASH', payload: cash})
     }
     const getCash =(cash)=> {
         dispatch({type: 'GET_CASH', payload: cash})
+
+    }
+
+    const addCustomer =(name)=> {
+        const customer = {
+            name,
+            id: Date.now()
+        }
+        dispatch(addCustomerAction(customer))
+    }
+    const deleteCustomer =(customer)=> {
+        dispatch(removeCustomerAction(customer.id))
 
     }
 
@@ -25,7 +39,26 @@ function App() {
                 style={{padding: '10px', background:'blue', color: 'white'}}>
                 Get cash
             </button>
+            <hr/>
+            <button onClick={()=> addCustomer(prompt())}
+                    style={{padding: '10px', background:'red', color: 'white'}}>
+                Add customer
+            </button>
+            <button onClick={()=> deleteCustomer()}
+                    style={{padding: '10px', background:'blue', color: 'white'}}>
+                Delete customer
+            </button>
         </div>
+
+        {customers.length !== 0 ?
+            <div>
+                {customers.map(x=>
+                    <div style={{background: 'red', padding: '15px'}} onClick={()=> deleteCustomer(x)}>{x.name}</div>
+                )}
+            </div>
+            :
+            <div>No customers....</div>
+        }
     </div>
   );
 }
