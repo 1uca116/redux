@@ -1,65 +1,43 @@
 import './App.css';
 import {useDispatch, useSelector} from "react-redux";
-import {addCustomerAction, removeCustomerAction} from "./store/customerReducer";
-import {fetchCustomers} from "./asyncActions/customers";
+import {asyncDecrementCreator, asyncIncrementCreator} from "./store/countReducer";
+import {fetchUsers} from "./store/userReducer";
 
 function App() {
     const dispatch = useDispatch();
-    const cash = useSelector(state => state.cash.cash);
-    const customers = useSelector(state => state.customers.customers)
+    const count = useSelector(state => state.countReducer.count);
+    const users = useSelector(state => state.userReducer.users)
 
-    const addCash =(cash)=> {
-        dispatch({type: 'ADD_CASH', payload: cash})
-    }
-    const getCash =(cash)=> {
-        dispatch({type: 'GET_CASH', payload: cash})
-
-    }
-
-    const addCustomer =(name)=> {
-        const customer = {
-            name,
-            id: Date.now()
-        }
-        dispatch(addCustomerAction(customer))
-    }
-    const deleteCustomer =(customer)=> {
-        dispatch(removeCustomerAction(customer.id))
-
-    }
 
   return (
     <div className="App" style={{display:'flex', flexDirection:'column', justifyContent: "center", alignItems: "center", height: '100vh'}}>
-        <div style={{margin: 5, fontSize: '1.5rem' }}>Balance: {cash}</div>
+        <div style={{margin: 5, fontSize: '1.5rem' }}>Balance: {count}</div>
         <div>
-            <button onClick={()=> addCash(Number(prompt()))}
+            <button onClick={()=> dispatch(asyncIncrementCreator())}
                     style={{padding: '10px', background:'red', color: 'white'}}>
-                Add cash
+                Add ++
             </button>
-            <button onClick={()=> getCash(Number(prompt()))}
+            <button onClick={()=> dispatch(asyncDecrementCreator())}
                 style={{padding: '10px', background:'blue', color: 'white'}}>
-                Get cash
+                Delete --
             </button>
             <hr/>
-            <button onClick={()=> addCustomer(prompt())}
+            <button onClick={()=> dispatch(fetchUsers())}
                     style={{padding: '10px', background:'red', color: 'white'}}>
-                Add customer
+                Get users
             </button>
-            <button onClick={()=> dispatch(fetchCustomers())}
-                    style={{padding: '10px', background:'blue', color: 'white'}}>
-                Get clients from DB
-            </button>
+
         </div>
 
-        {customers.length !== 0 ?
+
             <div>
-                {customers.map(x=>
-                    <div style={{background: 'red', padding: '15px'}} onClick={()=> deleteCustomer(x)}>{x.name}</div>
+                {users.map(x=>
+                    <div style={{background: 'red', padding: '15px'}} key={x.id}>
+                        {x.name}
+                    </div>
                 )}
             </div>
-            :
-            <div>No customers....</div>
-        }
+
     </div>
   );
 }
